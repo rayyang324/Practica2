@@ -8,8 +8,6 @@ ListNode* reverseList(ListNode*);
 
 ListNode *reverse_range(ListNode *head, int left, int right)
 {
-  if (left == 0)
-  {
   //save right state
   ListNode* rightAdd = toAddress(head, right - 1);
   //save left state
@@ -18,6 +16,7 @@ ListNode *reverse_range(ListNode *head, int left, int right)
   ListNode* leftConnect = toAddress(head, left - 1);
   ListNode* rightConnect = toAddress(head, right);
 
+  leftConnect->next = rightAdd;
   rightAdd->next = NULL;
 
   rightAdd = reverseList(leftAdd);
@@ -77,9 +76,8 @@ ListNode* reverseList(ListNode* list)
   }
   cur->next = prev;
   nextSave->next = cur;
-  return next;
+  return nextSave;
 }
-
 
 
 
