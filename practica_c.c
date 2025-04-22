@@ -65,19 +65,19 @@ ListNode* reverseList(ListNode* list)
     return list;
   }
 
-  ListNode* prev = list;
-  ListNode* temp = prev->next;
-  prev->next = NULL;
-  while(temp->next != NULL)
-  {
+  ListNode* prev = NULL;
+  ListNode* cur = list;
+  ListNode* nextSave = list->next;
 
-    ListNode* nextSave = temp->next;
-    temp->next = prev;
-    prev = temp;
-    temp = nextSave;
+  while(nextSave->next != NULL)
+  {
+    cur->next = prev;
+    prev = cur;
+    nextSave = nextSave->next;
   }
-  temp->next = prev;
-  return temp;
+  cur->next = prev;
+  nextSave->next = cur;
+  return next;
 }
 
 
