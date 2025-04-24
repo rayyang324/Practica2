@@ -1,79 +1,64 @@
-// MODIFY ONLY THIS FILE
-// Fill in the function following the instructions in the README
-
 #include "practica_c.h"
 
-ListNode* toAddress(ListNode*, int);
-ListNode* reverseList(ListNode*);
+ListNode* toAddress(ListNode* head, int pos);
+ListNode* reverseList(ListNode* list);
 
-ListNode *reverse_range(ListNode *head, int left, int right)
+ListNode* reverse_range(ListNode* head, int left, int right)
 {
-  //save right state
-  ListNode* rightAdd = toAddress(head, right - 1);
-  //save left state
-  ListNode* leftAdd = toAddress(head, left);
+    if (head == NULL || left >= right) return head;
 
-  ListNode* leftConnect = toAddress(head, left - 1);
-  ListNode* rightConnect = toAddress(head, right);
+    // Get relevant nodes
+    ListNode* leftPrev = (left == 0) ? NULL : toAddress(head, left - 1);
+    ListNode* leftStart = (leftPrev == NULL) ? head : leftPrev->next;
+    ListNode* rightEnd = toAddress(head, right - 1);
+    ListNode* rightNext = (rightEnd == NULL) ? NULL : rightEnd->next;
 
-  rightAdd->next = NULL;
+    if (leftStart == NULL || rightEnd == NULL) return head;
 
-  rightAdd = reverseList(leftAdd);
+    // Disconnect the sublist to reverse
+    rightEnd->next = NULL;
 
-  if (rightAdd == NULL)
-  {
-    leftConnect->next = rightConnect;
+    // Reverse the sublist
+    ListNode* reversedHead = reverseList(leftStart);
+
+    // Reconnect left side
+    if (leftPrev != NULL) {
+        leftPrev->next = reversedHead;
+    } else {
+        head = reversedHead; // Reversal started from head
+    }
+
+    // Reconnect right side
+    leftStart->next = rightNext;
+
     return head;
-  }
-  ListNode* temp = rightAdd;
-
-  while(temp->next != NULL)
-  {
-    temp = temp->next;
-  }
-  if (left == 0)
-  {
-    leftConnect->next = rightConnect;
-  }
-  leftConnect->next = rightAdd;
-  temp->next = rightConnect;
-
-
-  return head;
 }
 
 ListNode* toAddress(ListNode* head, int pos)
 {
-  for (int i = 0; i < pos; i++)
-  {
-    if (head->next == NULL) {return NULL;}
-    head = head->next;
-  }
-  return head;
+    ListNode* temp = head;
+    for (int i = 0; i < pos; i++)
+    {
+        if (temp == NULL || temp->next == NULL) {
+            return NULL;
+        }
+        temp = temp->next;
+    }
+    return temp;
 }
 
 ListNode* reverseList(ListNode* list)
 {
-  if (list == NULL)
-  {
-    return NULL;
-  }
-  else if (list->next == NULL)
-  {
-    return list;
-  }
+    ListNode* prev = NULL;
+    ListNode* cur = list;
 
-  ListNode* prev = NULL;
-  ListNode* cur = list;
-  ListNode* nextSave = NULL;
+    while (cur != NULL)
+    {
+        ListNode* next = cur->next;
+        cur->next = prev;
+        prev = cur;
+        cur = next;
+    }
 
-  while(cur != NULL)
-  {
-    nextSave = cur->next;
-    cur->next = prev;
-    prev = cur;
-    cur = nextSave;
-  }
-  return prev;
+    return prev;
 }
-
